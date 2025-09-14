@@ -1,26 +1,21 @@
 from inspect_ai import Task, task
-from inspect_ai._eval.task.epochs import Epochs
 from inspect_ai.dataset import example_dataset
 
-from inspect_ai.scorer import match, score_reducer
-from inspect_ai.scorer._metric import Score
-from inspect_ai.scorer._reducer.types import ScoreReducer
+from inspect_ai.scorer import Metric, accuracy, match, scorer, stderr
 from inspect_ai.solver import generate
 
+# ideally we want this to work
+def get_metrics1() -> list[Metric]:
+    return [accuracy(), stderr()]
 
-@task
-def task_using_custom_reducer():
-    return Task(
-        dataset=example_dataset("theory_of_mind"),
-        solver=[generate()],
-        scorer=match(),
-        epochs=Epochs(10, ["a_custom_score_reducer"]),
-    )
+@scorer(metrics=get_metrics1()) # linter throws at get_metrics1
+def custom_scorer1():
+    return match()
 
+# this is the current approach but messy
+def get_metrics2() -> list[Metric | dict[str, list[Metric]]] | dict[str, list[Metric]]:
+    return [accuracy(), stderr()]
 
-@score_reducer
-def a_custom_score_reducer() -> ScoreReducer:
-    def reduce(scores: list[Score]) -> Score:
-        return Score(value=0)
-
-    return reduce
+@scorer(metrics=get_metrics2())
+def custom_scorer2():
+    return match()
