@@ -27,7 +27,7 @@ to
 metrics: Sequence[Metric | dict[str, Sequence[Metric]]] | dict[str, Sequence[Metric]]
 ```
 
-4. To maintain compatibility with existing code, further change the argument type from `dict` to `Mapping`.
+4. `custom_scorer2` now has linter errors. To maintain compatibility with existing code, further change the argument type from `dict` to `Mapping`.
 
 ```python
 metrics: Sequence[Metric | Mapping[str, Sequence[Metric]]] | Mapping[str, Sequence[Metric]]
